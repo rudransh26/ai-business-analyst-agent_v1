@@ -1,6 +1,6 @@
 import requests
 from sqlalchemy import text
-from app.db.connection import engine
+from db.connection import engine
 import os
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
@@ -66,22 +66,22 @@ def validate_sql(sql):
     return True
 def fix_sql(sql, error):
     prompt = f"""
-The following SQL failed:
+    The following SQL failed:
 
-SQL:
-{sql}
+    SQL:
+    {sql}
 
-Error:
-{error}
+    Error:
+    {error}
 
-Fix the SQL. Return only corrected SQL.
-"""
+    Fix the SQL. Return only corrected SQL.
+    """
 
     response = requests.post(OLLAMA_URL, json={
-        "model": "llama3",
-        "prompt": prompt,
-        "stream": False
-    })
+            "model": "llama3",
+            "prompt": prompt,
+            "stream": False
+        })
 
     return response.json()["response"].strip()
 

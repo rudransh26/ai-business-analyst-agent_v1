@@ -6,7 +6,9 @@ from sentence_transformers import SentenceTransformer
 # -----------------------------
 # CONFIG
 # -----------------------------
-DOC_PATH = "data/docs"
+# Get project root by going up one level from the agents directory
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DOC_PATH = os.path.join(PROJECT_ROOT, "data", "docs")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 # Load embedding model

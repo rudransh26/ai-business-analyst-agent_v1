@@ -1,8 +1,8 @@
-from agents.doc_agent import doc_agent
+from agents.langgraph_agent import run_agent
 
 query = "Why is Indonesia performing well?"
 
-result = doc_agent(query)
+result = run_agent(query)
 
-print("\nDoc Agent Output:\n")
+print("\nFinal Output:\n")
 print(result)
