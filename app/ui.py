@@ -10,35 +10,50 @@ st.set_page_config(
     layout="wide"
 )
 
-# -----------------------------
-# TITLE
-# -----------------------------
 st.title("📊 AI Business Analyst Agent")
-st.markdown("Ask business questions using data + market insights")
 
 # -----------------------------
-# INPUT
+# SESSION STATE (MEMORY)
 # -----------------------------
-query = st.text_input(
-    "Enter your question:",
-    placeholder="e.g. Why is Indonesia performing well?"
-)
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 # -----------------------------
-# BUTTON
+# DISPLAY CHAT HISTORY
 # -----------------------------
-if st.button("Run Analysis"):
-    if query.strip() == "":
-        st.warning("Please enter a query")
-    else:
-        with st.spinner("Analyzing... 🤖"):
-            try:
-                result = run_agent(query)
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.write(msg["content"])
 
-                st.success("Analysis Complete ✅")
+# -----------------------------
+# USER INPUT
+# -----------------------------
+query = st.chat_input("Ask a business question...")
 
-                st.markdown("### 📊 Result")
-                st.write(result)
+if query:
+    # Show user message
+    st.chat_message("user").write(query)
 
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
+    # Save user message
+    st.session_state.messages.append({
+        "role": "user",
+        "content": query
+    })
+
+    # Generate response
+    with st.spinner("Analyzing... 🤖"):
+        try:
+            result = run_agent(query)
+
+        except Exception as e:
+            result = f"Error: {str(e)}"
+
+    # Show assistant response
+    with st.chat_message("assistant"):
+        st.write(result)
+
+    # Save assistant response
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": result
+    })
