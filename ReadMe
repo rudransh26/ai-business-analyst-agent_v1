@@ -1,0 +1,40 @@
+# 🧠 AI Business Analyst Agent
+
+This project is an AI-powered Business Analyst that combines:
+
+- 📊 SQL-based data analysis (PostgreSQL)
+- 📄 Document intelligence (RAG)
+- 🤖 LLM reasoning (Llama 3 via Ollama)
+
+---
+
+## 🚀 Features
+
+- Natural language → SQL queries
+- Semantic document search
+- Combined reasoning (data + context)
+- Business-style insights
+
+---
+
+## 🧱 Tech Stack
+
+- Python
+- PostgreSQL (Docker + pgvector)
+- Ollama (Llama 3)
+- Sentence Transformers
+- LangGraph (planned)
+
+---
+
+## 📂 Project Structure
+
+myenv/
+venv/
+__pycache__/
+*.pyc
+.env
+*.log
+.vscode/
+data/clean_sales.csv
+data/docs/

@@ -1,0 +1,9 @@
+myenv/
+venv/
+__pycache__/
+*.pyc
+.env
+*.log
+.vscode/
+data/clean_sales.csv
+data/docs/
