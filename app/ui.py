@@ -45,15 +45,34 @@ if query:
         try:
             result = run_agent(query)
 
-        except Exception as e:
-            result = f"Error: {str(e)}"
+            # Display the final result
+            final_answer = result.get("result", "No result generated")
 
-    # Show assistant response
-    with st.chat_message("assistant"):
-        st.write(result)
+            # Show assistant response
+            with st.chat_message("assistant"):
+                st.write(final_answer)
+
+                # Show SQL if available
+                if "sql" in result and result["sql"]:
+                    st.code(result["sql"], language="sql")
+
+                # Show documents if available
+                if "docs" in result and result["docs"]:
+                    with st.expander("📄 Retrieved Documents"):
+                        for i, doc in enumerate(result["docs"], 1):
+                            st.write(f"**Document {i}:**")
+                            st.write(doc[:500] + "..." if len(doc) > 500 else doc)
+                            st.divider()
+
+        except Exception as e:
+            final_answer = f"Error: {str(e)}"
+
+            # Show error message
+            with st.chat_message("assistant"):
+                st.error(final_answer)
 
     # Save assistant response
     st.session_state.messages.append({
         "role": "assistant",
-        "content": result
+        "content": final_answer
     })

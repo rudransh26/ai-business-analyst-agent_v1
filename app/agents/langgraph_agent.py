@@ -2,9 +2,9 @@ from langgraph.graph import StateGraph, END
 from typing import TypedDict
 
 from agents.planner_agent import planner_agent
-from agents.sql_agent import sql_agent
-from agents.doc_agent import doc_agent
 from agents.combined_agent import combined_agent
+from agents.sql_agent import sql_tool
+from agents.doc_agent import retrieve_docs, doc_agent
 
 
 
@@ -19,32 +19,52 @@ class AgentState(TypedDict):
     query: str
     decision: str
     result: str
-
+    sql: str
+    docs: list
 
 # -----------------------------
 # NODES
 # -----------------------------
 def planner_node(state: AgentState):
     decision = planner_agent(state["query"])
-    print("\nPlanner Decision:", decision)
-
     return {"decision": decision}
 
 
+
 def sql_node(state: AgentState):
-    result = sql_agent(state["query"])
-    return {"result": str(result)}
+    sql, result = sql_tool(state["query"])
+
+    return {
+        "result": str(result),
+        "sql": sql
+    }
 
 
 def doc_node(state: AgentState):
+    docs = retrieve_docs(state["query"])
     result = doc_agent(state["query"])
-    return {"result": result}
 
+    return {
+        "result": result,
+        "docs": docs
+    }
 
 def combined_node(state: AgentState):
-    result = combined_agent(state["query"])
-    return {"result": result}
+    sql, sql_result = sql_tool(state["query"])
+    docs= retrieve_docs(state["query"])
 
+    final_result = combined_agent(
+        state["query"],
+        sql,
+        sql_result,
+        docs
+    )
+
+    return {
+        "result": final_result,
+        "sql": sql,
+        "docs": docs
+    }
 
 # -----------------------------
 # ROUTER
@@ -95,4 +115,4 @@ def run_agent(query: str):
         "query": query
     })
 
-    return result["result"]
+    return result
